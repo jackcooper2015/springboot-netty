@@ -171,7 +171,7 @@ message Message {
 关于消息格式，此处我只是非常非常简单的定义了几个字段，`requestId`代表消息Id,`CommandType`表示消息的类型，这里简单分为心跳消息类型和业务消息类型，然后`content`就是具体的消息内容。这里的消息格式定义是十分简陋，真正的项目实战中，关于自定义消息格式的要求是非常多的，是比较复杂的。
 
 上面简单的介绍了 protobuf的一些语法规则，关于 protobuf语法的更多介绍参考官方文档：https://developers.google.com/protocol-buffers/docs/proto3
-#### 使用 `.proto`编译器编译
+#### 使用 `.proto`编译器编译（需要安装，太麻烦，推荐下面的方法）
 第一步已经定义好了 protobuf的消息格式，然后我们用 `.proto`文件的编译器将我们定义的 消息格式编译生成对应的 Java类，以便于我们在项目中使用该消息类。
 
 关于protobuf编译器的安装这里我就不细说，详情见官方文档： https://developers.google.com/protocol-buffers/
@@ -183,6 +183,8 @@ protoc -I = ./ --java_out=./ ./Message.proto
 - `-I` 选项用于指定待编译的 `.proto`消息定义文件所在的目录，该选项也可以写作为 `--proto_path`
 - `--java_out`选项表示生成 Java代码后存放位置，对于不同语言，我们的选项可能不同，比如生成C++代码为 `--cpp_out`
 - 在前两个选项后再加上 待编译的消息定义文件
+#### 使用在线编译器编译（❤❤❤）
+https://protogen.marcgravell.com/
 
 #### 使用 Java 对应 的 protobuf API来读写消息
 前面已经根据 `.proto`消息定义文件生成的Java类，我们这里代码根据 `Message.proto`生成了`MessageBase`类，但是要正常的使用生成的 Java 类，我们还需要引入 protobuf-java的依赖：
