@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.UUID;
 
 /**
@@ -18,10 +21,10 @@ public class ConsumerController {
     private NettyClient nettyClient;
 
     @GetMapping("/send")
-    public String send() {
+    public String send() throws UnsupportedEncodingException {
         MessageBase.Message message = new MessageBase.Message()
                 .toBuilder().setCmd(MessageBase.Message.CommandType.NORMAL)
-                .setContent("hello netty")
+                .setContent("我是中国人")
                 .setRequestId(UUID.randomUUID().toString()).build();
         nettyClient.sendMsg(message);
         return "send ok";
