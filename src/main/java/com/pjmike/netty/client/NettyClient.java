@@ -30,8 +30,33 @@ public class NettyClient  {
     private String host;
     private SocketChannel socketChannel;
 
+    //写出失败自动重试5次
+    public void send(MessageBase.Message message, int counts) {
+        final int after = ++counts;
+        socketChannel.writeAndFlush(message).addListener(future -> {
+            if (future.isSuccess()) {
+                log.info("{}写出完成!", message);
+            } else {
+                log.error("{}写出失败,重新send-{}!", message, after);
+                if (after < 5) {
+                    Thread.sleep(50);
+                    send(message, after);
+                }
+            }
+        });
+    }
+
     public void sendMsg(MessageBase.Message message) {
-        socketChannel.writeAndFlush(message);
+        //发送消息，处理异常
+        socketChannel.writeAndFlush(message).addListener(future -> {
+            if(future.isSuccess()){
+                log.info("{}发送成功",message.getRequestId());
+            }else{
+                log.error("{}发送异常：",message.getRequestId(),future.cause());
+            }
+        });
+        //失败重试方案(弱网环境下可用)
+//        this.send(message,1);
     }
 
     @PostConstruct
